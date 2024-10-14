@@ -7,13 +7,22 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * Meeting room
+ */
 @Service
 @RequiredArgsConstructor
 public class MeetingRoomService {
 
+    /**
+     * {@link MeetingRoomRepository} initialization.
+     */
     private final MeetingRoomRepository roomRepository;
 
-    // Get all rooms
+    /**
+     * Gets a list structure with all the {@link MeetingRoom} that exist in the database.
+     */
+
     public List<MeetingRoom> getAllRooms() {
         return roomRepository.findAll();
     }
