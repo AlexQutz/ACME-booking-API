@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
 @Service
@@ -18,23 +17,18 @@ public class BookingService {
     private final BookingRepository bookingRepository;
     private final GetBookingsResponseMapper bookingMapper;
 
+    /**
+     * Returns a {@link List} of all the bookings of a specific room on a specific date.
+     * @param roomName
+     * @param date
+     * @return
+     */
     public List<GetBookingsResponseDTO> findBookingsByRoomAndDate(String roomName, LocalDate date) {
         List<Booking> bookings = bookingRepository.findByMeetingRoomNameAndDate(roomName, date);
 
-        // Use the mapper to convert entities to DTOs
         return bookings.stream()
                 .map(bookingMapper::toDTO)
                 .toList();
     }
 
-//    public BookingDTO createBooking(BookingDTO bookingDTO) {
-//        // Use the mapper to convert DTO to entity
-//        Booking booking = bookingMapper.toEntity(bookingDTO);
-//
-//        // Save the entity to the database
-//        Booking savedBooking = bookingRepository.save(booking);
-//
-//        // Return the saved booking as DTO
-//        return bookingMapper.toDTO(savedBooking);
-//    }
 }

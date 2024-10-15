@@ -2,12 +2,13 @@ package com.acme.mvp.mappers;
 
 import com.acme.mvp.dtos.GetBookingsResponseDTO;
 import com.acme.mvp.models.Booking;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
+/**
+ * Mapper for {@link GetBookingsResponseDTO} to {@link Booking} and vice versa.
+ */
 @Mapper(componentModel = "spring")
 public interface GetBookingsResponseMapper {
 

@@ -1,7 +1,9 @@
 package com.acme.mvp.controllers;
 
+import com.acme.mvp.models.Booking;
 import com.acme.mvp.dtos.GetBookingsResponseDTO;
 import com.acme.mvp.services.BookingService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,21 +12,29 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
+/**
+ * Contains all available endpoints for the {@link Booking} model.
+ */
 @RestController
-@RequestMapping("/api/bookings")
+@RequiredArgsConstructor
+@RequestMapping("/v1/api/bookings")
 public class BookingController {
 
+    /**
+     * Initialize {@link BookingService}
+     */
     private final BookingService bookingService;
 
-    // Constructor injection
-    public BookingController(BookingService bookingService) {
-        this.bookingService = bookingService;
-    }
 
-    @GetMapping("/search")
+    /**
+     * Gets all the bookings of a meeting room on a specific date
+     * @param roomName
+     * @param date
+     * @return list of bookings.
+     */
+    @GetMapping
     public ResponseEntity<List<GetBookingsResponseDTO>> getBookings(
             @RequestParam String roomName,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
