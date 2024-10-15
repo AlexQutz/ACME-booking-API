@@ -4,6 +4,8 @@ import com.acme.mvp.dtos.CreateBookingRequestDTO;
 import com.acme.mvp.models.Booking;
 import com.acme.mvp.dtos.GetBookingsResponseDTO;
 import com.acme.mvp.services.BookingService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -35,6 +37,9 @@ public class BookingController {
      * @param date
      * @return list of bookings.
      */
+    @Operation(summary = "Get bookings for a specific room and date",
+            description = "Retrieve all bookings for a specific room and date")
+    @ApiResponse(responseCode = "200", description = "List of bookings")
     @GetMapping
     public ResponseEntity<List<GetBookingsResponseDTO>> getBookings(
             @RequestParam String roomName,
@@ -54,6 +59,9 @@ public class BookingController {
      * @param bookingCreateDTO
      * @return
      */
+    @Operation(summary = "Create a new booking",
+            description = "Book a meeting room with a specific time slot")
+    @ApiResponse(responseCode = "201", description = "Booking created successfully")
     @PostMapping
     public ResponseEntity<GetBookingsResponseDTO> createBooking(@RequestBody CreateBookingRequestDTO bookingCreateDTO) {
         GetBookingsResponseDTO createdBooking = bookingService.createBooking(bookingCreateDTO);
@@ -66,6 +74,9 @@ public class BookingController {
      * @param id
      * @return
      */
+    @Operation(summary = "Cancel a booking",
+            description = "Cancel a specific booking by its ID")
+    @ApiResponse(responseCode = "200", description = "Booking canceled successfully")
     @DeleteMapping("/{id}")
     public ResponseEntity<String> cancelBooking(@PathVariable Long id) {
         String response = bookingService.cancelBooking(id);
