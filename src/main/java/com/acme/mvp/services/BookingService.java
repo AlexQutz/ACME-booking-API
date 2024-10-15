@@ -141,7 +141,7 @@ public class BookingService {
      * @param timeFrom
      * @param timeTo
      */
-    private void validateTimeInterval(LocalTime timeFrom, LocalTime timeTo) {
+    void validateTimeInterval(LocalTime timeFrom, LocalTime timeTo) {
 
         long hoursDifference = ChronoUnit.HOURS.between(timeFrom, timeTo);
 
