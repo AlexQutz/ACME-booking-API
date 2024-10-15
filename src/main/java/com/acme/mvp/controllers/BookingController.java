@@ -1,18 +1,19 @@
 package com.acme.mvp.controllers;
 
+import com.acme.mvp.dtos.CreateBookingRequestDTO;
 import com.acme.mvp.models.Booking;
 import com.acme.mvp.dtos.GetBookingsResponseDTO;
 import com.acme.mvp.services.BookingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Contains all available endpoints for the {@link Booking} model.
@@ -46,5 +47,52 @@ public class BookingController {
         }
 
         return ResponseEntity.ok(bookings);
+    }
+
+    /**
+     * Creates a {@link Booking} or throws an exception if something goes wrong.
+     * @param bookingCreateDTO
+     * @return
+     */
+    @PostMapping
+    public ResponseEntity<GetBookingsResponseDTO> createBooking(@RequestBody CreateBookingRequestDTO bookingCreateDTO) {
+        GetBookingsResponseDTO createdBooking = bookingService.createBooking(bookingCreateDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdBooking);
+    }
+
+
+    /**
+     * Endpoint that deletes the {@link Booking} that has the id provided.
+     * @param id
+     * @return
+     */
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> cancelBooking(@PathVariable Long id) {
+        String response = bookingService.cancelBooking(id);
+        return ResponseEntity.ok(response);
+    }
+
+    /**
+     * Exception handler that throws the messages from the {@link BookingService} as a json message.
+     * @param ex
+     * @return
+     */
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<Map<String, String>> handleIllegalArgumentException(IllegalArgumentException ex) {
+        Map<String, String> errorResponse = new HashMap<>();
+        errorResponse.put("error", ex.getMessage());
+        return ResponseEntity.badRequest().body(errorResponse);
+    }
+
+    /**
+     * Exception handler for an other exception other than the ones specified.
+     * @param ex
+     * @return
+     */
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<Map<String, String>> handleGenericException(Exception ex) {
+        Map<String, String> errorResponse = new HashMap<>();
+        errorResponse.put("error", "An unexpected error occurred.");
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
     }
 }
