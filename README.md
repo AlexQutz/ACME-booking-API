@@ -39,12 +39,12 @@ This API provides functionalities for managing bookings in a meeting room applic
   * 200 OK: Returns a list of bookings.
 
     
-    {
-    "employeeEmail": "john.doe@acme.com",
-    "date": "2024-10-20",
-    "timeFrom": "09:00:00",
-    "timeTo": "10:00:00"
-    }
+        {
+        "employeeEmail": "john.doe@acme.com",
+        "date": "2024-10-20",
+        "timeFrom": "09:00:00",
+        "timeTo": "10:00:00"
+        }
     
 
   * 204 No Content: No bookings found for the specified room and date.
@@ -57,26 +57,26 @@ This API provides functionalities for managing bookings in a meeting room applic
 * Request Body:
 
     
-    {
-     "meetingRoomName": "Room B",
-     "employeeEmail": "john.doe@acme.com",
-     "date": "2024-10-22",
-     "timeFrom": "10:00:00",
-     "timeTo": "12:00:00"
-    }
+        {
+         "meetingRoomName": "Room B",
+         "employeeEmail": "john.doe@acme.com",
+         "date": "2024-10-22",
+         "timeFrom": "10:00:00",
+         "timeTo": "12:00:00"
+        }
 
 * Responses:
 
   * 201 Created: Booking created successfully.
   
       
-     {
-      "meetingRoomName": "Room B",
-      "employeeEmail": "john.doe@acme.com",
-      "date": "2024-10-22",
-      "timeFrom": "10:00:00",
-      "timeTo": "12:00:00"
-      }
+         {
+          "meetingRoomName": "Room B",
+          "employeeEmail": "john.doe@acme.com",
+          "date": "2024-10-22",
+          "timeFrom": "10:00:00",
+          "timeTo": "12:00:00"
+          }
       
   * 400 Bad Request: Returns error message if the booking cannot be created (e.g., room already booked).
   
@@ -95,7 +95,7 @@ This API provides functionalities for managing bookings in a meeting room applic
   * 200 OK: Booking canceled successfully.
 
     
-    "Booking was canceled successfully!"
+       "Booking was canceled successfully!"
     
   
   * 400 Bad Request: Returns error message if the booking is not found or cannot be canceled.
@@ -152,7 +152,7 @@ This API provides functionalities for managing bookings in a meeting room applic
 Example Error Response
 
     
-    "error": "Meeting room not found"
+        "error": "Meeting room not found"
     
 ## Technologies Used
 

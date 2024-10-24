@@ -48,8 +48,10 @@ class BookingServiceIntegrationTest extends Specification {
         given: "A new meeting room, employee, and booking details"
         MeetingRoom room = meetingRoomRepository.save(new MeetingRoom(null, "Conference Room B"))
         Employee employee = employeeRepository.save(new Employee(null, "jane.doe@acme.com"))
+        LocalTime startTime = LocalTime.now()
+        LocalTime endTime = LocalTime.now().plusHours(1)
         CreateBookingRequestDTO createBookingDTO = new CreateBookingRequestDTO(room.getName(), employee.getEmail(),
-                LocalDate.of(2024,10,20), LocalTime.of(10,0), LocalTime.of(12, 0))
+                LocalDate.now(), startTime, endTime)
 
         when: "A booking is created"
         def createdBooking = bookingService.createBooking(createBookingDTO)
@@ -57,9 +59,9 @@ class BookingServiceIntegrationTest extends Specification {
         then: "The booking is saved correctly and can be retrieved"
         createdBooking.meetingRoomName == "Conference Room B"
         createdBooking.employeeEmail == "jane.doe@acme.com"
-        createdBooking.date == LocalDate.of(2024, 10, 20)
-        createdBooking.timeFrom == LocalTime.of(10, 0)
-        createdBooking.timeTo == LocalTime.of(12, 0)
+        createdBooking.date == LocalDate.now()
+        createdBooking.timeFrom == startTime
+        createdBooking.timeTo == endTime
     }
 
     def "should throw an exception if the meeting room is not found"() {
@@ -81,7 +83,7 @@ class BookingServiceIntegrationTest extends Specification {
         MeetingRoom room = meetingRoomRepository.save(new MeetingRoom(null, "Conference Room B"))
         Employee employee = employeeRepository.save(new Employee(null, "john.doe@acme.com"))
         Booking booking = bookingRepository.save(new Booking(null, room, employee,
-                LocalDate.of(2024, 10, 21), LocalTime.of(14, 0), LocalTime.of(16, 0)))
+                LocalDate.now(), LocalTime.of(14, 0), LocalTime.of(16, 0)))
 
         when: "The booking is canceled"
         def result = bookingService.cancelBooking(booking.id)

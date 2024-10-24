@@ -62,9 +62,10 @@ public class BookingService {
         Employee employee = employeeRepository.findByEmail(createBookingDTO.employeeEmail())
                 .orElseThrow(() -> new IllegalArgumentException("Employee not found"));
 
-        validateConflict(createBookingDTO, meetingRoom);
         validateTimeToIsAfterTimeFrom(createBookingDTO);
+        validateDateInThePast(createBookingDTO);
         validateTimeInterval(createBookingDTO.timeFrom(), createBookingDTO.timeTo());
+        validateConflict(createBookingDTO, meetingRoom);
 
         Booking booking = bookingMapper.toEntity(createBookingDTO);
         booking.setMeetingRoom(meetingRoom);
@@ -92,6 +93,17 @@ public class BookingService {
         bookingRepository.delete(booking);
 
         return "Booking was canceled successfully!";
+    }
+
+    private void validateDateInThePast(CreateBookingRequestDTO createBookingDTO) {
+
+        LocalDate bookingDate =  createBookingDTO.date();
+        LocalTime bookingEndTime = createBookingDTO.timeTo();
+
+        if (bookingDate.isBefore(LocalDate.now()) ||
+                (bookingDate.isEqual(LocalDate.now()) && bookingEndTime.isBefore(LocalTime.now()))) {
+            throw new IllegalArgumentException("Cannot make a booking in the past.");
+        }
     }
 
     /**
@@ -128,7 +140,7 @@ public class BookingService {
      * @param meetingRoom
      */
     private void validateConflict(CreateBookingRequestDTO createBookingDTO, MeetingRoom meetingRoom) {
-        boolean conflict = bookingRepository.existsByMeetingRoomAndDateAndTimeFromLessThanEqualAndTimeToGreaterThanEqual(
+        boolean conflict = bookingRepository.existsByMeetingRoomAndDateAndTimeFromLessThanAndTimeToGreaterThan(
                 meetingRoom, createBookingDTO.date(), createBookingDTO.timeTo(), createBookingDTO.timeFrom());
 
         if (conflict) {

@@ -60,16 +60,16 @@ public class TestBookingService {
         booking.setId(1L);
         booking.setMeetingRoom(meetingRoom);
         booking.setEmployee(employee);
-        booking.setDate(LocalDate.of(2024, 10, 20));
-        booking.setTimeFrom(LocalTime.of(10, 0));
-        booking.setTimeTo(LocalTime.of(11, 0));
+        booking.setDate(LocalDate.now());
+        booking.setTimeFrom(LocalTime.now());
+        booking.setTimeTo(LocalTime.now().plusHours(1));
 
         createBookingDTO = new CreateBookingRequestDTO(
                 "Conference Room",
                 "employee@acme.com",
-                LocalDate.of(2024, 10, 20),
-                LocalTime.of(10, 0),
-                LocalTime.of(11, 0)
+                LocalDate.now(),
+                LocalTime.now(),
+                LocalTime.now().plusHours(1)
         );
     }
 
@@ -79,18 +79,18 @@ public class TestBookingService {
     @Test
     public void testFindBookingsByRoomAndDateSuccess() {
 
-        when(bookingRepository.findByMeetingRoomNameAndDate("Conference Room", LocalDate.of(2024, 10, 20)))
+        when(bookingRepository.findByMeetingRoomNameAndDate("Conference Room", LocalDate.now()))
                 .thenReturn(List.of(booking));
         when(bookingMapper.toDTO(booking)).thenReturn(new GetBookingsResponseDTO(
                 1L,
                 "Conference Room",
                 "employee@acme.com",
-                LocalDate.of(2024,10,20),
-                LocalTime.of(10, 0),
-                LocalTime.of(11, 0)
+                LocalDate.now(),
+                LocalTime.now(),
+                LocalTime.now().plusHours(1)
         ));
 
-        List<GetBookingsResponseDTO> result = bookingService.findBookingsByRoomAndDate("Conference Room", LocalDate.of(2024, 10, 20));
+        List<GetBookingsResponseDTO> result = bookingService.findBookingsByRoomAndDate("Conference Room", LocalDate.now());
 
         assertNotNull(result);
         assertEquals(1, result.size());
@@ -107,7 +107,7 @@ public class TestBookingService {
         when(employeeRepository.findByEmail("employee@acme.com")).thenReturn(Optional.of(employee));
         when(bookingMapper.toEntity(createBookingDTO)).thenReturn(booking);
         when(bookingRepository.save(booking)).thenReturn(booking);
-        when(bookingMapper.toDTO(booking)).thenReturn(new GetBookingsResponseDTO(1L,"Conference Room","employee@acme.com",LocalDate.of(2024,10,16), LocalTime.of(10, 0), LocalTime.of(11, 0)));
+        when(bookingMapper.toDTO(booking)).thenReturn(new GetBookingsResponseDTO(1L,"Conference Room","employee@acme.com",LocalDate.now(), LocalTime.of(10, 0), LocalTime.of(11, 0)));
 
 
         GetBookingsResponseDTO responseDTO = bookingService.createBooking(createBookingDTO);
@@ -148,7 +148,7 @@ public class TestBookingService {
 
         when(meetingRoomRepository.findByName("Conference Room")).thenReturn(Optional.of(meetingRoom));
         when(employeeRepository.findByEmail("employee@acme.com")).thenReturn(Optional.of(employee));
-        when(bookingRepository.existsByMeetingRoomAndDateAndTimeFromLessThanEqualAndTimeToGreaterThanEqual(
+        when(bookingRepository.existsByMeetingRoomAndDateAndTimeFromLessThanAndTimeToGreaterThan(
                 meetingRoom, createBookingDTO.date(), createBookingDTO.timeTo(), createBookingDTO.timeFrom()
         )).thenReturn(true);
 

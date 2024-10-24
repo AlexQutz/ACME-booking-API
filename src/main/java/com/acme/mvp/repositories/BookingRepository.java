@@ -30,5 +30,5 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
      * @param localTime1
      * @return
      */
-    boolean existsByMeetingRoomAndDateAndTimeFromLessThanEqualAndTimeToGreaterThanEqual(MeetingRoom meetingRoom, LocalDate date, LocalTime localTime, LocalTime localTime1);
+    boolean existsByMeetingRoomAndDateAndTimeFromLessThanAndTimeToGreaterThan(MeetingRoom meetingRoom, LocalDate date, LocalTime localTime, LocalTime localTime1);
 }

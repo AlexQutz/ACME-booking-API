@@ -39,15 +39,18 @@ public class Booking {
     /**
      * Date.
      */
+    @Column(nullable = false)
     private LocalDate date;
 
     /**
      * Time from.
      */
+    @Column(nullable = false)
     private LocalTime timeFrom;
 
     /**
      * Time to.
      */
+    @Column(nullable = false)
     private LocalTime timeTo;
 }

@@ -6,7 +6,6 @@ import com.acme.mvp.models.MeetingRoom;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -17,6 +16,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
+@ActiveProfiles("test")
 public class TestBookingRepository {
 
     @Autowired
@@ -45,18 +45,18 @@ public class TestBookingRepository {
      */
     @Test
     public void testFindByMeetingRoomNameAndDate() {
-        // Arrange
+
         LocalDate today = LocalDate.now();
-        LocalTime startTime = LocalTime.of(10, 0);
-        LocalTime endTime = LocalTime.of(11, 0);
+        LocalTime startTime = LocalTime.now();
+        LocalTime endTime = LocalTime.now().plusHours(1);
 
         bookingRepository.save(new Booking(1L,meetingRoom1, employee, today, startTime, endTime));
-        bookingRepository.save(new Booking(2L,meetingRoom1, employee, today, LocalTime.of(12, 0), LocalTime.of(13, 0)));
+        bookingRepository.save(new Booking(2L,meetingRoom1, employee, today, startTime.plusHours(2), endTime.plusHours(3)));
 
-        // Act
+
         List<Booking> bookings = bookingRepository.findByMeetingRoomNameAndDate("Room A", today);
 
-        // Assert
+
         assertEquals(2, bookings.size());
     }
 
@@ -112,7 +112,7 @@ public class TestBookingRepository {
         bookingRepository.save(new Booking(1L,meetingRoom1, employee, today, startTime, endTime));
 
         // Act
-        boolean conflictExists = bookingRepository.existsByMeetingRoomAndDateAndTimeFromLessThanEqualAndTimeToGreaterThanEqual(
+        boolean conflictExists = bookingRepository.existsByMeetingRoomAndDateAndTimeFromLessThanAndTimeToGreaterThan(
                 meetingRoom1, today, LocalTime.of(10, 30), LocalTime.of(11, 30));
 
         // Assert
@@ -132,7 +132,7 @@ public class TestBookingRepository {
         bookingRepository.save(new Booking(1L,meetingRoom1, employee, today, startTime, endTime));
 
         // Act
-        boolean conflictExists = bookingRepository.existsByMeetingRoomAndDateAndTimeFromLessThanEqualAndTimeToGreaterThanEqual(
+        boolean conflictExists = bookingRepository.existsByMeetingRoomAndDateAndTimeFromLessThanAndTimeToGreaterThan(
                 meetingRoom1, today, LocalTime.of(11, 0), LocalTime.of(12, 0));
 
         // Assert
@@ -152,7 +152,7 @@ public class TestBookingRepository {
         bookingRepository.save(new Booking(1L,meetingRoom1, employee, today, startTime, endTime));
 
         // Act
-        boolean conflictExists = bookingRepository.existsByMeetingRoomAndDateAndTimeFromLessThanEqualAndTimeToGreaterThanEqual(
+        boolean conflictExists = bookingRepository.existsByMeetingRoomAndDateAndTimeFromLessThanAndTimeToGreaterThan(
                 meetingRoom1, today, startTime, endTime);
 
         // Assert
@@ -166,13 +166,13 @@ public class TestBookingRepository {
     public void testExistsByMeetingRoomAndDateAndTimeSlot_FullOverlap() {
         // Arrange
         LocalDate today = LocalDate.now();
-        LocalTime startTime = LocalTime.of(10, 0);
+        LocalTime startTime = LocalTime.of(8, 0);
         LocalTime endTime = LocalTime.of(11, 0);
 
         bookingRepository.save(new Booking(1L,meetingRoom1, employee, today, startTime, endTime));
 
         // Act
-        boolean conflictExists = bookingRepository.existsByMeetingRoomAndDateAndTimeFromLessThanEqualAndTimeToGreaterThanEqual(
+        boolean conflictExists = bookingRepository.existsByMeetingRoomAndDateAndTimeFromLessThanAndTimeToGreaterThan(
                 meetingRoom1, today, LocalTime.of(9, 0), LocalTime.of(12, 0));
 
         // Assert

@@ -114,7 +114,7 @@ class BookingControllerIntegrationTest extends Specification {
         given: "A booking exists"
         def room = meetingRoomRepository.save(new MeetingRoom(null, "Room C"))
         def employee = employeeRepository.save(new Employee(null, "jane.doe@acme.com"))
-        def booking = bookingRepository.save(new Booking(null, room, employee, LocalDate.of(2024, 10, 23), LocalTime.of(14, 0), LocalTime.of(16, 0)))
+        def booking = bookingRepository.save(new Booking(null, room, employee, LocalDate.now(), LocalTime.now(), LocalTime.now().plusHours(1)))
 
         when: "A DELETE request is made to cancel the booking"
         def result = mockMvc.perform(delete("/v1/api/bookings/${booking.id}")
